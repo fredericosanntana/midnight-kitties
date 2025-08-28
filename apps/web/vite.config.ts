@@ -47,12 +47,6 @@ export default defineConfig({
           process: ['process/browser', 'default'],
         }),
       ],
-      external: [
-        '@midnight-ntwrk/midnight-js-node-zk-config-provider',
-        'fetch-blob',
-        'node-domexception',
-        'formdata-polyfill',
-      ],
     },
   },
   plugins: [
@@ -70,12 +64,12 @@ export default defineConfig({
       },
     },
     include: ['@repo/kitties-api'],
-    exclude: ['@midnight-ntwrk/kitties-contract', 'node-fetch', 'fetch-blob', 'node-domexception'],
+    exclude: ['@midnight-ntwrk/kitties-contract'],
   },
   resolve: {
     alias: {
       ...stdLibBrowser,
-      // Additional specific aliases
+      // Additional specific aliases for Node.js modules
       'node:util': stdLibBrowser.util,
       'node:buffer': stdLibBrowser.buffer,
       'node:fs': stdLibBrowser.fs,
@@ -83,7 +77,6 @@ export default defineConfig({
       'node:path': stdLibBrowser.path,
       process: stdLibBrowser.process,
       'process/browser': stdLibBrowser.process,
-      'process/browser/browser': stdLibBrowser.process,
 
       // Environment Abstraction Layer Aliases
       //
@@ -99,11 +92,10 @@ export default defineConfig({
       './env-node.js': '@repo/kitties-api/dist/browser/env-browser',
       './env-node': '@repo/kitties-api/dist/browser/env-browser',
       '../node/env-node.js': '@repo/kitties-api/dist/browser/env-browser',
-      // fs/promises is intentionally not polyfilled for browser
     },
   },
   define: {
     'process.env': {},
-    global: 'window',
+    global: 'globalThis',
   },
 });
