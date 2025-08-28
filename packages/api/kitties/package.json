@@ -4,28 +4,13 @@
   "license": "GPL-3.0",
   "private": true,
   "type": "module",
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./dist/browser-index.js",
+  "types": "./dist/browser-index.d.ts",
   "exports": {
     ".": {
-      "browser": {
-        "types": "./dist/browser-index.d.ts",
-        "import": "./dist/browser-index.js",
-        "require": "./dist/browser-index.js"
-      },
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.js"
-    },    
-    "./node-api": {
-      "types": "./dist/node/api.d.ts",
-      "import": "./dist/node/api.js",
-      "require": "./dist/node/api.js"
-    },
-    "./common-api": {
-      "types": "./dist/common/api.d.ts",
-      "import": "./dist/common/api.js",
-      "require": "./dist/common/api.js"
+      "types": "./dist/browser-index.d.ts",
+      "import": "./dist/browser-index.js",
+      "require": "./dist/browser-index.js"
     },
     "./browser-api": {
       "types": "./dist/browser/api.d.ts",
@@ -48,19 +33,29 @@
     "dist"
   ],
   "scripts": {
-    "build": "rm -rf dist && tsc && cp ../../cli/standalone.yml dist/",
-    "test-api": "docker compose -f ../../cli/standalone.yml pull && DEBUG='testcontainers' vitest run",
-    "test-against-testnet": "RUN_ENV_TESTS=true TEST_ENV=testnet TEST_WALLET_SEED=692f140c1e8d527c7c7fca5beb9bbfe412a4f0a1ccca2e15f672352c579b68fb vitest run"
+    "build": "rm -rf dist && tsc"
   },
   "dependencies": {
     "@midnight-ntwrk/kitties-contract": "*",
-    "vite-plugin-node-polyfills": "^0.23.0"
+    "@midnight-ntwrk/midnight-js-level-private-state-provider": "*",
+    "@midnight-ntwrk/midnight-js-types": "*",
+    "@midnight-ntwrk/midnight-js-network-id": "*",
+    "@midnight-ntwrk/compact-runtime": "*",
+    "@midnight-ntwrk/dapp-connector-api": "*",
+    "@midnight-ntwrk/wallet-api": "*",
+    "@midnight-ntwrk/ledger": "*",
+    "@midnight-ntwrk/midnight-js-fetch-zk-config-provider": "*",
+    "@midnight-ntwrk/midnight-js-http-client-proof-provider": "*",
+    "vite-plugin-node-polyfills": "^0.23.0",
+    "pino": "^9.6.0",
+    "fp-ts": "^2.16.0",
+    "semver": "^7.6.3",
+    "@types/semver": "^7.5.8",
+    "rxjs": "^7.8.1"
   },
   "devDependencies": {
     "@repo/eslint-config": "*",
     "@repo/typescript-config": "*",
-    "@types/node": "^22.15.29",
-    "@types/ws": "^8.18.1",
     "typescript": "^5.8.3"
   }
 }

@@ -771,13 +771,9 @@ export { Kitties, witnesses } from '@midnight-ntwrk/kitties-contract';
 export type { KittiesContract, KittiesProviders, DeployedKittiesContract } from './types.js';
 export { deployContract, findDeployedContract } from '@midnight-ntwrk/midnight-js-contracts';
 
-// Re-export currentDir from config for compatibility
-export { currentDir } from './config.js';
-
 export function setLogger(_logger: any) {
   // Logger functionality replaced with console.log
 }
 
-// Note: Node.js specific functions (buildWalletAndWaitForFunds, buildFreshWallet, etc.)
-// are available in './node-api' for CLI compatibility, but are not exported here
-// to maintain browser compatibility
+// Note: This is a browser-only version of the API.
+// All functionality is designed to work in browser environments only.

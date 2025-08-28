@@ -32,40 +32,37 @@
 
 - [Contract Guide](packages/contracts/kitties/README.md)
 - [API Reference](packages/api/kitties/README.md)
-- [CLI Usage Guide](packages/cli/kitties/README.md)
 
 ## Project Overview
 
-**Midnight Kitties** is a decentralized application that demonstrates the capabilities of the Midnight blockchain ecosystem. This project serves as a showcase of the **Compact programming language**, showing how smart contracts can be built using Midnight's innovative technology stack.
+**Midnight Kitties** is a browser-based decentralized application that demonstrates the capabilities of the Midnight blockchain ecosystem. This project serves as a showcase of the **Compact programming language**, showing how smart contracts can be built using Midnight's innovative technology stack.
 
-The application implements a CryptoKitties-inspired NFT system with breeding mechanics and marketplace functionality.
+The application implements a CryptoKitties-inspired NFT system with breeding mechanics and marketplace functionality, designed to run entirely in web browsers.
 
 ### Key Features
 
 - **Compact Language Learning** - A practical example of building with Midnight's Compact programming language
 - **NFT Module Integration** - Uses external NFT modules from the midnight-contracts repository
 - **Complete NFT System** - Includes breeding, trading, and ownership mechanics
-- **Full-Stack Application** - Web UI, CLI tools, APIs, and testing framework
+- **Browser-First Application** - Web UI with comprehensive testing framework
 - **Genetic Breeding System** - Basic breeding mechanics with DNA inheritance and generation tracking
 
 ## Technical Architecture
 
-This project shows how different components work together in the Midnight ecosystem:
+This project shows how browser-based components work together in the Midnight ecosystem:
 
 ```
-  ┌─────────────────────┐    ┌─────────────────────┐
-  │    Web Frontend     │    │    CLI Interface    │
-  │                     │    │                     │
-  │ • React + Material  │    │ • Interactive Menu  │
-  │ • Wallet Connect    │    │ • Contract Deploy   │
-  │ • Real-time State   │    │ • Breeding Tools    │
-  │ • Gallery View      │    │ • Market Operations │
-  └─────────────────────┘    └─────────────────────┘
-           │                          │
-           └──────────────────────────┘
+             ┌─────────────────────┐
+             │    Web Frontend     │
+             │                     │
+             │ • React + Material  │
+             │ • Wallet Connect    │
+             │ • Real-time State   │
+             │ • Gallery View      │
+             └─────────────────────┘
                         │
              ┌─────────────────────┐    ┌─────────────────────┐
-             │   Unified API       │◄──►│   Smart Contract    │
+             │   Browser API       │◄──►│   Smart Contract    │
              │                     │    │                     │
              │ • Ledger Integration│    │ • Compact Language  │
              │ • State Management  │    │ • NFT Integration   │
@@ -101,18 +98,11 @@ This project shows how different components work together in the Midnight ecosys
   - Integration with external NFT standard modules
 
 ### API Layer  
-- **`packages/api/kitties/`** - Unified API abstraction:
-  - Cross-platform compatibility (Browser/Node.js)
+- **`packages/api/kitties/`** - Browser API layer:
+  - Browser-optimized implementation
   - Provider pattern for blockchain interactions
   - Type-safe contract bindings
   - Transaction management utilities
-
-### Development Tools
-- **`packages/cli/kitties/`** - Comprehensive CLI toolkit:
-  - Contract deployment and management
-  - Interactive breeding and trading operations
-  - Development environment utilities
-  - Testing and debugging tools
 
 ### Supporting Infrastructure
 - **`packages/ui/`** - Reusable React component library
@@ -143,24 +133,6 @@ yarn build
 yarn start
 # Access at http://127.0.0.1:8080/
 ```
-
-### 💻 CLI Operations  
-```bash
-# Interactive CLI with testnet (external proof server)
-yarn kitties-cli-remote
-
-# CLI with integrated proof server
-yarn kitties-cli-remote-ps
-```
-
-**CLI Features:**
-- 🚀 Deploy new kitty contracts
-- 🐱 Create and manage kitties  
-- 🧬 Breed kitties with genetic inheritance
-- 💰 Marketplace operations (buy/sell/offer)
-- 📊 Contract statistics (# of Kitties in existence)
-- 🧐​ Query kitty details and ownership
-- 🖼️ Direct access to selected NFT module circuits 
 
 ## Compact Language & Smart Contract
 
@@ -266,7 +238,6 @@ yarn build
 # Build specific components
 yarn build:contracts
 yarn build:api
-yarn build:cli
 yarn build:ui
 yarn build:app
 ```
@@ -278,9 +249,6 @@ yarn test-contract
 
 # Run API integration tests  
 yarn test-api
-
-# Test against live testnet
-yarn test-against-testnet
 ```
 
 ### Code Quality
@@ -319,7 +287,6 @@ yarn format
 
 - **[Contract Source Code](packages/contracts/kitties/src/kitties.compact)** - Complete Compact implementation
 - **[API Documentation](packages/api/kitties/README.md)** - Comprehensive API reference  
-- **[CLI Guide](packages/cli/kitties/README.md)** - Command-line interface documentation
 - **[Environment Setup](packages/api/kitties/ENVIRONMENT_ABSTRACTION.md)** - Development environment guide
 - **[Path Resolution](packages/api/kitties/PATH_RESOLUTION.md)** - Module resolution documentation
 
