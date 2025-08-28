@@ -190,11 +190,6 @@ yarn test
 3. Update TypeScript exports if needed
 4. Verify all tests pass
 
-### 3. Integration Testing
-```bash
-# Test against API layer
-cd ../../api/kitties
-yarn test-api
 ```
 
 ## Deployment Considerations

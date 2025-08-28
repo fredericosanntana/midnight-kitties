@@ -37,19 +37,19 @@
 
 **Midnight Kitties** is a browser-based decentralized application that demonstrates the capabilities of the Midnight blockchain ecosystem. This project serves as a showcase of the **Compact programming language**, showing how smart contracts can be built using Midnight's innovative technology stack.
 
-The application implements a CryptoKitties-inspired NFT system with breeding mechanics and marketplace functionality, designed to run entirely in web browsers.
+The application implements a CryptoKitties-inspired NFT system with breeding mechanics and marketplace functionality, designed to run entirely in web browsers without any CLI or Node.js server components.
 
 ### Key Features
 
 - **Compact Language Learning** - A practical example of building with Midnight's Compact programming language
 - **NFT Module Integration** - Uses external NFT modules from the midnight-contracts repository
 - **Complete NFT System** - Includes breeding, trading, and ownership mechanics
-- **Browser-First Application** - Web UI with comprehensive testing framework
+- **Browser-Only Application** - Web UI with comprehensive testing framework, no CLI or server components
 - **Genetic Breeding System** - Basic breeding mechanics with DNA inheritance and generation tracking
 
 ## Technical Architecture
 
-This project shows how browser-based components work together in the Midnight ecosystem:
+This project shows how browser-only components work together in the Midnight ecosystem:
 
 ```
              ┌─────────────────────┐
@@ -67,7 +67,7 @@ This project shows how browser-based components work together in the Midnight ec
              │ • Ledger Integration│    │ • Compact Language  │
              │ • State Management  │    │ • NFT Integration   │
              │ • Type Safety       │    │ • Breeding Logic    │
-             │ • Browser/Node.js   │    │ • Marketplace Logic │
+             │ • Browser-Only      │    │ • Marketplace Logic │
              └─────────────────────┘    └─────────────────────┘
                        │                          ▲
           ┌────────────────────────────┐          │
@@ -98,7 +98,7 @@ This project shows how browser-based components work together in the Midnight ec
   - Integration with external NFT standard modules
 
 ### API Layer  
-- **`packages/api/kitties/`** - Browser API layer:
+- **`packages/api/kitties/`** - Browser-only API layer:
   - Browser-optimized implementation
   - Provider pattern for blockchain interactions
   - Type-safe contract bindings
@@ -129,8 +129,13 @@ yarn build
 
 ### 🌐 Web Application
 ```bash
-# Launch the React frontend
-yarn start
+# Launch the React frontend development server
+yarn workspace @repo/web-app dev
+# Access at http://localhost:5173/
+
+# Or build and start production server
+yarn workspace @repo/web-app build
+yarn workspace @repo/web-app start
 # Access at http://127.0.0.1:8080/
 ```
 
@@ -230,25 +235,23 @@ This demonstrates how Compact can handle complex logic while maintaining integra
 ### Building the Project
 ```bash
 # Compile smart contracts
-yarn compact
+yarn workspace @midnight-ntwrk/kitties-contract compact
 
 # Build all packages
 yarn build
 
 # Build specific components
-yarn build:contracts
-yarn build:api
-yarn build:ui
-yarn build:app
+yarn workspace @midnight-ntwrk/kitties-contract build
+yarn workspace @repo/kitties-api build
+yarn workspace @repo/ui build
+yarn workspace @repo/web-app build
 ```
 
 ### Testing Suite
 ```bash
 # Run contract simulation tests
-yarn test-contract
+yarn workspace @midnight-ntwrk/kitties-contract test
 
-# Run API integration tests  
-yarn test-api
 ```
 
 ### Code Quality
@@ -273,20 +276,20 @@ yarn format
 ### Ecosystem Development  
 - **Module Integration** - Demonstrates how to use external contract modules effectively
 - **Development Patterns** - Establishes patterns for code reuse in Midnight projects
+- **Browser-Only Architecture** - Shows how to build complete dApps that run entirely in browsers
 - **Community Building** - Provides a foundation for other NFT projects on Midnight
 
 ## Documentation
 
 - [Contract Development Guide](packages/contracts/kitties/README.md)
 - [API Reference](packages/api/kitties/README.md)
-- [CLI Usage Guide](packages/cli/kitties/README.md)
 - [Environment Abstraction](packages/api/kitties/ENVIRONMENT_ABSTRACTION.md)
 - [Path Resolution](packages/api/kitties/PATH_RESOLUTION.md)
 
 ## Documentation & Resources
 
 - **[Contract Source Code](packages/contracts/kitties/src/kitties.compact)** - Complete Compact implementation
-- **[API Documentation](packages/api/kitties/README.md)** - Comprehensive API reference  
+- **[API Documentation](packages/api/kitties/README.md)** - Comprehensive API reference for browser-only usage 
 - **[Environment Setup](packages/api/kitties/ENVIRONMENT_ABSTRACTION.md)** - Development environment guide
 - **[Path Resolution](packages/api/kitties/PATH_RESOLUTION.md)** - Module resolution documentation
 

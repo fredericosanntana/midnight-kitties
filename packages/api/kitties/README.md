@@ -1,6 +1,6 @@
 # Kitties API Reference
 
-The Kitties API provides a unified interface for interacting with the CryptoKitties smart contract from both browser and Node.js environments.
+The Kitties API provides a browser-only interface for interacting with the CryptoKitties smart contract in web environments.
 
 ## Table of Contents
 
@@ -8,7 +8,7 @@ The Kitties API provides a unified interface for interacting with the CryptoKitt
 - [Installation](#installation)
 - [Quick Start](#quick-start)
   - [Browser Environment](#browser-environment)
-  - [Node.js Environment](#nodejs-environment)
+  - [Browser Environment](#browser-environment)
 
 ### API Documentation
 - [Core API](#core-api)
@@ -34,7 +34,7 @@ The Kitties API provides a unified interface for interacting with the CryptoKitt
 - [Error Handling](#error-handling)
 - [State Observation](#state-observation)
 - [Testing](#testing)
-- [Environment Differences](#environment-differences)
+- [Browser Implementation](#browser-implementation)
 
 
 ### Additional Resources
@@ -62,17 +62,6 @@ const kittiesApi = await KittiesAPI.deploy(providers, {});
 
 // Or connect to existing contract
 const kittiesApi = await KittiesAPI.connect(providers, contractAddress);
-```
-
-### Node.js Environment
-```typescript
-import { KittiesAPI, configureProviders } from '@repo/kitties-api/node-api';
-
-// Configure providers
-const providers = await configureProviders(wallet, config, zkConfigProvider);
-
-// Deploy or connect
-const kittiesApi = await KittiesAPI.deploy(providers, {});
 ```
 
 ## Core API
@@ -380,17 +369,6 @@ const providers = await configureBrowserProviders(
 );
 ```
 
-### Node.js Providers
-```typescript
-import { configureProviders } from '@repo/kitties-api/node-api';
-
-const providers = await configureProviders(
-  wallet,
-  config,
-  zkConfigProvider
-);
-```
-
 ## Error Handling
 
 The API throws descriptive errors for common issues:
@@ -424,40 +402,38 @@ cd packages/api/kitties
 yarn test
 ```
 
-### Test Against Testnet
-```bash
-yarn test-against-testnet
-```
 
-## Environment Differences
 
-### Browser vs Node.js
-- Browser: Uses wallet connector for transactions
-- Node.js: Direct wallet integration
-- Both: Same API surface, different provider setup
+## Browser Implementation
+
+### Architecture
+The API is designed exclusively for browser environments, providing:
+- Wallet connector integration for transactions
+- Browser-optimized provider setup
+- Web-compatible module resolution
 
 #### Configuration Files
 
 - **[apps/web/vite.config.ts](../../apps/web/vite.config.ts)** - Vite configuration with aliases and comments
 ## Key Concepts Documented
 
-### 🌐 Cross-Platform Compatibility
+### 🌐 Browser-Only Architecture
 
-**Problem**: The kitties-api needs to work in both Node.js and browser environments with different capabilities.
+**Approach**: The kitties-api is designed exclusively for browser environments with web-optimized implementations.
 
-**Solutions Documented**:
+**Features**:
 
-- Environment abstraction layer (`env.ts`, `env-node.ts`, `env-browser.ts`)
-- Universal path resolution (`path-resolver.ts`)
-- Vite alias configuration for browser builds
+- Browser environment abstraction layer (`env-browser.ts`)
+- Browser-optimized path resolution 
+- Vite alias configuration for optimal browser builds
 
 ### 🔧 Build System Integration
 
 **Configuration Points**:
 
-- **Vite Aliases**: Route browser imports to browser-compatible implementations
-- **TypeScript**: Maintain type safety across environments
-- **Module Systems**: Handle both CommonJS and ESM contexts
+- **Vite Aliases**: Route imports to browser-compatible implementations
+- **TypeScript**: Maintain type safety for browser environments
+- **Module Systems**: Handle ESM contexts with browser polyfills
 
 ## Package Configuration & Dependencies
 

@@ -1,9 +1,22 @@
 # Midnight Kitties - AI Project Context (Browser-Only Version)
 
-> **Quick Reference Guide for AI Systems**  
-> Last Updated: August 27, 2025  
-> Repository: `riusricardo/midnight-kitties`  
-> Branch: `browser-only`
+> **Quick Reference Guide for # Quick Start Commands
+
+```bash
+# Install dependencies
+yarn install
+
+# Build everything
+yarn build
+
+# Start web application development server
+yarn workspace @repo/web-app dev
+
+# Start production web app
+yarn workspace @repo/web-app start
+
+# Test contract
+yarn workspace @midnight-ntwrk/kitties-contract test
 
 ## 🎯 Project Summary
 
@@ -44,7 +57,7 @@
 - **Tests**: `packages/contracts/kitties/src/test/`
 
 ### API Layer
-- **Universal API**: `packages/api/kitties/src/`
+- **Browser-Only API**: `packages/api/kitties/src/`
 - **Browser Entry**: `packages/api/kitties/src/browser-index.ts`
 - **Browser Implementation**: `packages/api/kitties/src/browser/`
 - **Common Code**: `packages/api/kitties/src/common/`
@@ -87,9 +100,9 @@ export ledger buyOffers: Map<Uint<64>, Map<ZswapCoinPublicKey, Offer>>;
 4. **NFT Standard**: All ERC-721 operations via external module
 
 ### API Architecture Patterns
-- **Browser Environment**: Optimized for web browser constraints
-- **Environment Detection**: Browser-only implementations
-- **Package Exports**: Browser-specific entry points
+- **Browser-Only Environment**: Optimized for web browser constraints
+- **Environment Detection**: Browser-only implementations with safe fallbacks
+- **Package Exports**: Browser-specific entry points only
 - **Unified Interface**: Consistent API surface for browser usage
 
 ## ⚡ Quick Start Commands
@@ -101,14 +114,14 @@ yarn install
 # Build everything
 yarn build
 
-# Start web app
-yarn start
+# Start web application development server
+yarn workspace @repo/web-app dev
+
+# Start production web app
+yarn workspace @repo/web-app start
 
 # Test contract
-yarn test-contract
-
-# Test API
-yarn test-api
+yarn workspace @midnight-ntwrk/kitties-contract test
 ```
 
 ## 🧪 Testing Strategy
@@ -118,22 +131,17 @@ yarn test-api
 - **Test File**: `packages/contracts/kitties/src/test/kitties.test.ts`
 - **Coverage**: Basic ops, marketplace, breeding, NFT standard, edge cases
 
-### API Testing
-- **Browser Environment**: Tests optimized for browser environment
-- **Integration**: Tests against live testnet via web interface
-- **Environment**: Tests browser-specific functionality
-
 ## 🔧 Development Workflow
 
 ### Contract Development
 1. Edit `kitties.compact`
-2. Run `yarn compact` to compile
-3. Run `yarn test-contract` to validate
+2. Run `yarn workspace @midnight-ntwrk/kitties-contract compact` to compile
+3. Run `yarn workspace @midnight-ntwrk/kitties-contract test` to validate
 4. Update API bindings if needed
 
 ### Frontend Development
 1. Edit files in `apps/web/src/` or `packages/ui/`
-2. Run `yarn start` for development server
+2. Run `yarn workspace @repo/web-app dev` for development server
 3. Test wallet integration and real-time updates
 
 ## 🎨 UI Components Architecture
@@ -190,7 +198,7 @@ yarn test-api
 
 ### For Midnight Ecosystem
 - **Module integration**: How to use external contract modules
-- **Browser development**: Browser-optimized development patterns
+- **Browser-only development**: Browser-optimized development patterns
 - **Web dApp architecture**: Complete browser-based dApp development approach
 
 ## 🔮 Extension Points
@@ -247,14 +255,17 @@ When issues arise, check:
    yarn build
    
    # Run tests to verify setup
-   yarn test-contract
-   yarn test-api
+   yarn workspace @midnight-ntwrk/kitties-contract test
    ```
 
 3. **Try the Application**
    ```bash
-   # Start web application
-   yarn start  # Visit http://127.0.0.1:8080/
+   # Start web application development server
+   yarn workspace @repo/web-app dev  # Visit http://localhost:5173/
+   
+   # Or build and start production server
+   yarn workspace @repo/web-app build
+   yarn workspace @repo/web-app start  # Visit http://127.0.0.1:8080/
    ```
 
 ### Learning Path for New Developers
@@ -278,80 +289,10 @@ When issues arise, check:
 
 - **Compact Language**: Midnight's smart contract language
 - **External Modules**: Integration with `midnight-contracts` NFT modules
-- **Browser API**: Browser-optimized API design
+- **Browser-Only API**: API designed exclusively for browser environments
 - **Turborepo**: Monorepo build system with caching
 - **ZK Proofs**: Privacy-first blockchain architecture
 
 ---
 
 **📝 Note for AI Systems**: This is a browser-only version of the Midnight Kitties project. All CLI and Node.js specific functionality has been removed. For detailed implementation specifics, refer to the comprehensive documentation in each package's README file and the source code comments.
-
----
-
-## � New Developer Onboarding
-
-### First Steps for New Developers
-
-1. **Environment Setup**
-   ```bash
-   # Prerequisites: Node.js v18+, Yarn
-   git clone https://github.com/riusricardo/midnight-kitties.git
-   cd midnight-kitties
-   yarn install
-   
-   # Set environment variable for Compact compiler
-   export COMPACT_PATH=/path/to/midnight-contracts
-   ```
-
-2. **Build and Test**
-   ```bash
-   # Compile contracts and build everything
-   yarn build
-   
-   # Run tests to verify setup
-   yarn test-contract
-   yarn test-api
-   ```
-
-3. **Try the Applications**
-   ```bash
-   # Start web application
-   yarn start  # Visit http://127.0.0.1:8080/
-   
-   # Try CLI interface
-   yarn kitties-cli-remote
-   ```
-
-### Learning Path for New Developers
-
-1. **Start with the Contract** (`packages/contracts/kitties/src/kitties.compact`)
-   - Understand the Compact language syntax
-   - Study the data structures (Kitty, Offer)
-   - Explore the breeding and marketplace logic
-
-2. **Explore the API** (`packages/api/kitties/`)
-   - See how the universal API works across environments
-   - Study the environment abstraction patterns
-   - Understand the testing simulator
-
-3. **Frontend Components** (`packages/ui/components/`)
-   - React components for the web interface
-   - State management with contexts and observables
-   - Wallet integration patterns
-
-4. **CLI Tools** (`packages/cli/kitties/`)
-   - Interactive command-line interface
-   - Contract deployment and interaction examples
-   - Testing against live networks
-
-### Key Concepts to Understand
-
-- **Compact Language**: Midnight's smart contract language
-- **External Modules**: Integration with `midnight-contracts` NFT modules
-- **Cross-Platform API**: Same API works in browser and Node.js
-- **Turborepo**: Monorepo build system with caching
-- **ZK Proofs**: Privacy-first blockchain architecture
-
----
-
-**📝 Note for AI Systems**: This document provides the essential context needed to understand and work with the Midnight Kitties project. For detailed implementation specifics, refer to the comprehensive documentation in each package's README file and the source code comments.
