@@ -23,7 +23,7 @@
  * damages or losses arising from the use of this software.
  */
 
-pragma language_version >= 0.16.0;
+pragma language_version >= 0.16;
 
 import CompactStandardLibrary;
 import "midnight-contracts/contracts/tokens/nft/src/modules/Nft";
@@ -73,8 +73,8 @@ export ledger allKittiesCount: Counter;
 // Boolean used to alternate gender assignment for new kitties.
 export ledger genderSelector: Boolean;
 
-// Mapping for kitty ID to Account to offer data.
-export ledger buyOffers: Map<Uint<64>, Map<ZswapCoinPublicKey, Offer>>;
+// Mapping for kitty ID + buyer to offer data.
+export ledger buyOffers: Map<Field, Offer>;
 
 // Witness function to retrieve a random number (for DNA generation and breeding).
 // WARNING: This is a witness, meaning the value is injected from outside the circuit 
@@ -149,10 +149,13 @@ export circuit createKitty(): [] {
 
 // Transfers a kitty to another account and resets its sale status.
 export circuit transferKitty(to: ZswapCoinPublicKey, kittyId: Uint<64>): [] {
-  // const sender = ownPublicKey();
+  const sender = ownPublicKey();
 
   // Ensure the kitty exists.
   assert(tokenExists(disclose(kittyId)), "Kitty does not exist");
+
+  // Ensure the sender is the owner.
+  assert(ownerOf(kittyId) == sender, "Not the owner of this kitty");
 
   // Retrieve the kitty data.
   const kitty = kitties.lookup(disclose(kittyId));
@@ -169,23 +172,16 @@ export circuit transferKitty(to: ZswapCoinPublicKey, kittyId: Uint<64>): [] {
 
   kitties.insert(disclose(kittyId), disclose(updatedKitty));
 
-  // Transfering token resets offers if the kitty was but on sale before.
-  if (buyOffers.member(disclose(kittyId))) {
-    // Note: In a real implementation, currency reimbursment would occur here.
-    // The currency transfer would be the bidPrice from the offer.
-    // For now, only clear offers.
-
-    // Empty the kitty offers.
-    buyOffers.remove(disclose(kittyId));
-    
-  }
+  // NOTE: buyOffers are keyed by hash(kittyId, buyer), so individual offers
+  // cannot be cleared here without knowing the buyer address.
+  // The NFT transfer module handles ownership validation.
 
   // Transfer the NFT using the imported NFT module.
   transfer(to, kittyId);
 }
 
 // Transfers a kitty to another account and resets its sale status.
-export circuit transferKittyFrom(from: ZswapCoinPublicKey, to: ZswapCoinPublicKey, kittyId: Uint<64>): [] {
+export circuit transferKittyFrom(from_addr: ZswapCoinPublicKey, to: ZswapCoinPublicKey, kittyId: Uint<64>): [] {
   // const sender = ownPublicKey();
 
   // Ensure the kitty exists.
@@ -206,18 +202,19 @@ export circuit transferKittyFrom(from: ZswapCoinPublicKey, to: ZswapCoinPublicKe
 
   kitties.insert(disclose(kittyId), disclose(updatedKitty));
 
+  const hashKeyKitty = transientHash<[Uint<64>, Bytes<32>]>([disclose(kittyId), default<Bytes<32>>]);
   // Transfering token resets offers if the kitty was but on sale before.
-  if (buyOffers.member(disclose(kittyId))) {
+  if (buyOffers.member(hashKeyKitty)) {
     // Note: In a real implementation, currency reimbursment would occur here.
     // The currency transfer would be the bidPrice from the offer.
     // For now, only clear offers.
 
     // Empty the kitty offers.
-    buyOffers.remove(disclose(kittyId));
+    buyOffers.remove(hashKeyKitty);
   }
 
   // Transfer the NFT using the imported NFT module.
-  transferFrom(from, to, kittyId);
+  transferFrom(from_addr, to, kittyId);
 }
 
 // Sets the price for a kitty and marks it as for sale if price > 0.
@@ -274,19 +271,15 @@ export circuit createBuyOffer(kittyId: Uint<64>, bidPrice: Uint<64>): [] {
     price: bidPrice
   };
 
-  // Initialize the inner map if it doesn't exist.
-  if (!buyOffers.member(disclose(kittyId))) {
-    buyOffers.insert(disclose(kittyId), default<Map<ZswapCoinPublicKey, Offer>>);
-  }
-
-  buyOffers.lookup(disclose(kittyId)).insert(disclose(buyer), disclose(newOffer));
+  const offerHash = transientHash<[Uint<64>, Bytes<32>]>([disclose(kittyId), disclose(buyer).bytes]);
+  buyOffers.insert(disclose(offerHash), disclose(newOffer));
 }
 
 // Approves a pending offer for a kitty, transferring ownership to the buyer.
 // Only the current owner can approve an offer.
 // Note: Currency transfer is not implemented here; only ownership is transferred.
 export circuit approveOffer(kittyId: Uint<64>, buyer: ZswapCoinPublicKey): [] {
-  assert(ownPublicKey() == ownerOf(disclose(kittyId)), "Only owner can sell.");
+  assert(ownPublicKey() == ownerOf(kittyId), "Only owner can sell.");
 
   // Retrieve the kitty's current data.
   const kitty = kitties.lookup(disclose(kittyId));
@@ -297,8 +290,9 @@ export circuit approveOffer(kittyId: Uint<64>, buyer: ZswapCoinPublicKey): [] {
   // Ensure the offer is valid (not default).
   assert(selectedOffer != default<Offer>, "Invalid offer.");
 
-  // Empty the kitty offers.
-  buyOffers.remove(disclose(kittyId));
+  // Remove the specific offer using the correct hash key (matching createBuyOffer).
+  const offerHash = transientHash<[Uint<64>, Bytes<32>]>([disclose(kittyId), disclose(buyer).bytes]);
+  buyOffers.remove(offerHash);
 
   // Prepare the updated kitty struct with new owner and reset sale info.
   const updatedKitty = Kitty {
@@ -395,12 +389,10 @@ export circuit getAllKittiesCount(): Uint<64> {
 }
 
 // Helper function to get the Offer from map.
-export circuit getOffer(kittyId: Uint<64>, from: ZswapCoinPublicKey): Offer {
-  if (
-    buyOffers.member(disclose(kittyId)) &&
-    buyOffers.lookup(disclose(kittyId)).member(disclose(from))
-  ) {
-    return buyOffers.lookup(disclose(kittyId)).lookup(disclose(from));
+export circuit getOffer(kittyId: Uint<64>, from_addr: ZswapCoinPublicKey): Offer {
+  const offerHash = transientHash<[Uint<64>, Bytes<32>]>([disclose(kittyId), disclose(from_addr).bytes]);
+  if (buyOffers.member(offerHash)) {
+    return buyOffers.lookup(offerHash);
   } else {
     return default<Offer>;
   }
