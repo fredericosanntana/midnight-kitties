@@ -1,5 +1,8 @@
 # 🐱 Midnight Kitties
 
+> This project is built on the Midnight Network.
+
+
 <div align="center">
 
 [![Midnight Network](https://midnight.network/brand-hub/logo-dark.svg)](https://midnight.network)
